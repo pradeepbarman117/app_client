@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+*{
+    font-family: "Inter", serif;
+}
+::-webkit-scrollbar{
+    display: none;
+}
+
+
+.flash {
+    animation: flash 1s;
+}
+
+@keyframes flash {
+    0% {
+        background-color: #ffff00;
+    }
+    50% {
+        background-color: #ffffff;
+    }
+    100% {
+        background-color: #ffff00;
+    }
+}
