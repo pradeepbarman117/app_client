@@ -5,9 +5,6 @@ import masterSchema from '../../validation/masterValidator';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import { memo } from 'react';
-// import { addMaster } from '../../redux/slices/master/masterSlice';
-// import { useDispatch } from 'react-redux';
-// import useSocket from '../../hooks/useSocket';
 
 
 const CreateMaster = () => {
@@ -42,28 +39,6 @@ const CreateMaster = () => {
                 setSubmitting(false); // Reset submitting state
             }
         },
-        // onSubmit: async (values, { setSubmitting, resetForm }) => {
-        //     let adminId = JSON.parse(Cookies.get('user')).id.toString();
-        //     let token = Cookies.get('token');
-        //     try {
-        //         const res = await masterServices.create({ ...values, adminId }, token);
-        //         if (res.status === 201) {
-        //             toast.success('Master created successfully');
-        //             dispatch(addMaster(res.data)); // Dispatch new master to Redux
-        //             resetForm();
-        //         }
-        //     } catch (error) {
-        //         if (error.response?.status === 400) {
-        //             toast.error(`Failed: ${error.response.data.message}`);
-        //         } else if (error.response?.status === 401) {
-        //             toast.error('Unauthorized. Please login again.');
-        //         } else {
-        //             toast.error('An error occurred. Please try again.');
-        //         }
-        //     } finally {
-        //         setSubmitting(false); // Reset submitting state
-        //     }
-        // },
     });
 
     return (
@@ -86,6 +61,7 @@ const CreateMaster = () => {
                                     value={formik.values.name}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
+                                    onKeyDown={allowOnly.char}
                                 />
                                 {formik.touched.name && formik.errors.name && (
                                     <div className="text-red-500 text-sm">{formik.errors.name}</div>
