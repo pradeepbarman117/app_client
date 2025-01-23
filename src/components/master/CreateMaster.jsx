@@ -1,10 +1,18 @@
 import { useFormik } from 'formik';
+<<<<<<< HEAD
 import { allowOnly } from '../../utility/allowOnly';
 import { masterServices } from '../../services/master/masterServices';
 import masterSchema from '../../validation/masterValidator';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import { memo } from 'react';
+=======
+import { allowOnly } from "../../utils/validation/allowOnly";
+import masterSchema from '../../../../../app_client/src/validation/masterValidator';
+import Cookies from 'js-cookie';
+import { masterServices } from '../../services/master/masterServices';
+import toast from 'react-hot-toast';
+>>>>>>> fe76fd557da426803569ab39d8a9e9e2d64d0c80
 
 
 const CreateMaster = () => {
@@ -17,12 +25,20 @@ const CreateMaster = () => {
             passcode: '',
             percent: '',
         },
+<<<<<<< HEAD
         validationSchema: masterSchema,
         onSubmit: async (values, {setSubmitting,resetForm}) => {
             let adminId = JSON.parse(Cookies.get().user).id.toString();
             let token = Cookies.get('token');
             try {
                 const res = await masterServices.create({...values,adminId},token);
+=======
+        validationSchema: masterSchema ,
+        onSubmit: async (values, {setSubmitting,resetForm}) => {
+            let token = Cookies.get('token');
+            try {
+                const res = await masterServices.create(values,token);
+>>>>>>> fe76fd557da426803569ab39d8a9e9e2d64d0c80
                 if(res.status === 201){
                     toast.success('Master created successfully');
                     resetForm();
@@ -174,7 +190,11 @@ const CreateMaster = () => {
     )
 }
 
+<<<<<<< HEAD
 export default memo(CreateMaster)
+=======
+export default CreateMaster
+>>>>>>> fe76fd557da426803569ab39d8a9e9e2d64d0c80
 
 
 

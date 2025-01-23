@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 // const Login = () => {
 //     return (
@@ -142,12 +143,25 @@ import { useDispatch } from 'react-redux';
 
 const Login = () => {
     const dispatch = useDispatch();
+=======
+// src/pages/Login.js
+import { useFormik } from 'formik';
+import loginSchema from '../../../utils/validation/forms/loginValidator';
+import { allowOnly } from '../../../utils/validation/allowOnly';
+import { useAuth } from '../../../hooks/useAuth';
+
+const Login = () => {
+
+    const { login } = useAuth()
+
+>>>>>>> fe76fd557da426803569ab39d8a9e9e2d64d0c80
     const formik = useFormik({
         initialValues: {
             email: '',
             password: '',
             passcode: '',
         },
+<<<<<<< HEAD
         validationSchema: loginValidationSchema,
         onSubmit: async (values, { setSubmitting }) => {
             try {
@@ -156,6 +170,17 @@ const Login = () => {
                 console.error("Login failed:", error); // Handle any errors (optional)
             } finally {
                 setSubmitting(false); // Reset submitting state
+=======
+        validationSchema: loginSchema,
+        onSubmit: async (values, { setSubmitting }) => {
+            try {
+                await login(values);
+            }catch(err){
+                console.error(err);
+            } 
+            finally {
+                setSubmitting(false);
+>>>>>>> fe76fd557da426803569ab39d8a9e9e2d64d0c80
             }
         },
     });
