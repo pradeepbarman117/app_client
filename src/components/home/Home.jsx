@@ -17,11 +17,8 @@ const Home = () => {
         return <HomeSkeleton/>
     }
 
-<<<<<<< HEAD
-=======
     console.log('home rendered');
 
->>>>>>> fe76fd557da426803569ab39d8a9e9e2d64d0c80
     return (
         <>
             {/* <div className="layout-content-container flex flex-col flex-1"> */}

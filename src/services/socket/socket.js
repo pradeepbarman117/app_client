@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-import io from 'socket.io-client';
-
-const socketConfig = {
-    io:io('http://localhost:8080'),
-}
-
-export default socketConfig
-=======
 
 // socket.js
 import Cookies from 'js-cookie';
@@ -90,4 +81,3 @@ class SocketManager {
 
 const socketManager = new SocketManager();
 export default socketManager;
->>>>>>> fe76fd557da426803569ab39d8a9e9e2d64d0c80
