@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import { allowOnly } from "../../utils/validation/allowOnly";
-import masterSchema from '../../../../../app_client/src/validation/masterValidator';
+import masterSchema from '../../utils/validation/forms/masterValidator';
 import Cookies from 'js-cookie';
 import { masterServices } from '../../services/master/masterServices';
 import toast from 'react-hot-toast';

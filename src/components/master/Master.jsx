@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import MasterSkeleton from "./MasterSkeleton";
 import socketManager from "../../services/socket/socket";
 import { useMasterQuery } from "../../queries/masters/getMaster";
+import { NavLink } from "react-router-dom";
 
 const Master = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +47,8 @@ const Master = () => {
   if (isLoading) {
     return <MasterSkeleton />;
   }
+
+  console.log('Master')
 
   return (
     <>
@@ -205,7 +208,7 @@ const Master = () => {
                   Name
                 </th>
                 <th className="table-d1275b0f-2fc9-489a-a24d-bfd0a675ef81-column-480 px-4 py-3  text-[#121417] w-[400px] text-sm font-medium leading-normal text-center">
-                  Users
+                  Share (%)
                 </th>
                 <th className="table-d1275b0f-2fc9-489a-a24d-bfd0a675ef81-column-480 px-4 py-3  text-[#121417] w-[400px] text-sm font-medium leading-normal text-center">
                   Creator
@@ -235,13 +238,13 @@ const Master = () => {
                         {items.name}
                       </td>
                       <td className="table-d1275b0f-2fc9-489a-a24d-bfd0a675ef81-column-480 h-[72px] px-4 py-2 w-[400px] text-sm font-normal leading-normal text-center">
-                        500
+                        {items.percent} %
                       </td>
                       <td className="table-d1275b0f-2fc9-489a-a24d-bfd0a675ef81-column-480 h-[72px] px-4 py-2 w-[400px] text-[#61788A] text-sm font-normal leading-normal text-center capitalize">
                         {items && items.admin.name}
                       </td>
                       <td className="table-d1275b0f-2fc9-489a-a24d-bfd0a675ef81-column-600 h-[72px] px-4 w-60 text-sm font-normal leading-normal">
-                        <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-4 bg-[#F0F2F5] text-[#121417] text-sm font-medium leading-normal w-full">
+                        <NavLink to={`/masters/${items.id}`} className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-4 bg-[#F0F2F5] text-[#121417] text-sm font-medium leading-normal w-full">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -261,8 +264,8 @@ const Master = () => {
                               d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                             />
                           </svg>
-                          <span className="truncate ms-1">View</span>
-                        </button>
+                          View
+                        </NavLink>
                       </td>
                     </tr>
                   );

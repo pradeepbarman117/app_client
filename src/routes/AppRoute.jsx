@@ -7,6 +7,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Login from "../components/common/login/Login";
 import PublicRoute from "./PublicRoute";
 import MasterPage from "../pages/master/MasterPage";
+import MasterDetailsPage from "../pages/master/MasterDetailsPage";
 
 const router = createBrowserRouter([
   {
@@ -27,8 +28,14 @@ const router = createBrowserRouter([
       },
       {
         path: "/masters",
-        element:<MasterPage/>
-      }
+        element:<MasterPage/>,
+        children:[
+          {
+            path: ":id",
+            element: <MasterDetailsPage/>,
+          }
+        ]
+      },
     ],
   },
   {

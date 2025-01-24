@@ -1,9 +1,10 @@
-import Master from '../../components/master/Master'
+import { useOutlet } from "react-router-dom";
+import Master from "../../components/master/Master";
 
 const MasterPage = () => {
-  return (
-    <Master/>
-  )
-}
+  const outlet = useOutlet();
 
-export default MasterPage
+  return outlet || <Master />;
+};
+
+export default MasterPage;
