@@ -15,7 +15,6 @@ const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const response = await authServices.validateSession();
-          console.log(response)
           if (response.status === 200) {
             setToken(token);
           }

@@ -8,6 +8,13 @@ const masterServices = {
             }
         }); // Replace with your backend endpoint
     },
+    update: async (id,credentials, token) => {
+        return api.patch(`/master/update/${id}`, credentials,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+    },
     get: async (token) => {
         return api.get('/master/getall', {
             headers: {

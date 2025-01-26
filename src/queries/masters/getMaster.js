@@ -6,7 +6,6 @@ const fetchMasters = async () => {
   try{
     const token = Cookies.get("token");
     const response = await masterServices.get(token);
-    console.log('api called');
     return response.data
   }catch(err){
     console.log('errr',err)

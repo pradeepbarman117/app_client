@@ -33,7 +33,17 @@ const router = createBrowserRouter([
           {
             path: ":id",
             element: <MasterDetailsPage/>,
-          }
+            children:[
+              {
+                path: "users",
+                element: <div>user</div>,
+              },
+              {
+                path: "overview",
+                element: <div>edit</div>,
+              }
+            ]
+          },
         ]
       },
     ],
