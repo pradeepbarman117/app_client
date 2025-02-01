@@ -1,8 +1,95 @@
+import { memo, useEffect, useMemo } from "react";
 import { allowOnly } from "../../../../utils/validation/allowOnly";
-import PropTypes from 'prop-types';
+import { useFormik } from "formik";
+import { useMasterByIdQuery } from "../../../../queries/masters/getMasterById";
+import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
+import MasterDetailsSkeleton from "../MasterDetailsSkeleton";
+import socketManager from "../../../../services/socket/socket";
+import Cookies from 'js-cookie';
+import { useQueryClient } from "@tanstack/react-query";
+import { masterUpdateSchema } from "../../../../utils/validation/forms/masterValidator";
+import { masterServices } from "../../../../services/master/masterServices";
 
+const MasterDetailsForm = () => {
 
-const MasterDetailsForm = ({ formik, isChanged }) => {
+  const { id } = useParams();
+  const { data, isLoading } = useMasterByIdQuery(id);
+  const queryClient = useQueryClient();
+
+  const formik = useFormik({
+    initialValues: data
+      ? {
+          name: data.data.name,
+          email: data.data.email,
+          password: data.data.password,
+          passcode: data.data.passcode,
+          percent: data.data.percent,
+          blacklist: data.data.blacklist,
+        }
+      : {
+          name: "",
+          email: "",
+          password: "",
+          passcode: "",
+          percent: "",
+          blacklist: false,
+        },
+    enableReinitialize: true,
+    validationSchema: masterUpdateSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      const credential = Object.keys(values).reduce((acc, key) => {
+        if (values[key] !== formik.initialValues[key]) {
+          acc[key] = values[key];
+        }
+        return acc;
+      }, {});
+
+      try {
+        const token = Cookies.get("token");
+        const response = await masterServices.update(id, credential, token);
+        if (response.status === 200) {
+          toast.success(response.data.message);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
+
+  useEffect(() => {
+    socketManager.connect();
+
+    const handleMasterUpdate = (updatedMaster) => {
+      queryClient.setQueryData(["masterById", id], (oldData) => {
+        if (!oldData) return { data: updatedMaster };
+        return { ...oldData, data: updatedMaster };
+      });
+    };
+
+    if (socketManager.io) {
+      socketManager.io.on("masterUpdated", handleMasterUpdate);
+    }
+
+    return () => {
+      if (socketManager.io) {
+        socketManager.io.off("masterUpdated", handleMasterUpdate);
+      }
+    };
+  }, [queryClient, id]);
+
+  const isChanged = useMemo(() => {
+    return Object.keys(formik.values).some(
+      (key) => formik.values[key] !== formik.initialValues[key]
+    );
+  }, [formik.values, formik.initialValues]);
+
+  if (isLoading || !data) {
+    return <MasterDetailsSkeleton />;
+  }
+
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
@@ -16,7 +103,7 @@ const MasterDetailsForm = ({ formik, isChanged }) => {
               value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              onKeyDown={allowOnly}
+              onKeyDown={allowOnly.char}
               name="name"
             />
             {formik.touched.name && formik.errors.name && (
@@ -92,25 +179,6 @@ const MasterDetailsForm = ({ formik, isChanged }) => {
   );
 };
 
+MasterDetailsForm.displayName = "MasterDetailsForm";
 
-MasterDetailsForm.propTypes = {
-    /**
-     * Formik object containing form state and handlers.
-     */
-    formik: PropTypes.shape({
-      values: PropTypes.object.isRequired,
-      handleChange: PropTypes.func.isRequired,
-      handleBlur: PropTypes.func.isRequired,
-      handleSubmit: PropTypes.func.isRequired,
-      touched: PropTypes.object.isRequired,
-      errors: PropTypes.object.isRequired,
-      isSubmitting: PropTypes.bool.isRequired,
-    }).isRequired,
-  
-    /**
-     * Flag indicating whether the form has changed.
-     */
-    isChanged: PropTypes.bool.isRequired,
-  };
-
-export default MasterDetailsForm;
+export default memo(MasterDetailsForm);

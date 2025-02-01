@@ -8,6 +8,7 @@ const masterSchema = Yup.object({
     .min(3, "Name must be at least 3 characters")
     .max(16, "Name must be at most 16 characters")
     .required("Name is required"),
+  userId: Yup.string().min(6,'must be at least 6 digit').max(16,'must be at most 16 digit').required("User ID is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .required("Password is required")
@@ -26,7 +27,8 @@ const masterUpdateSchema = Yup.object({
   email: Yup.string().email("Invalid email format"),
   name: Yup.string()
     .min(3, "Name must be at least 3 characters")
-    .max(16, "Name must be at most 16 characters").required('Name is required'),
+    .max(16, "Name must be at most 16 characters")
+    .required("Name is required"),
 
   percent: Yup.string()
     .min(1, "Percent must be at least 1 digit")

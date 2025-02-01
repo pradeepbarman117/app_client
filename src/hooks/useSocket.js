@@ -1,6 +1,10 @@
 // src/hooks/useSocket.js
-import { useEffect } from 'react';
-import { setupSocket, listenToMasterAdded, disconnectSocket } from '../utility/socket';
+import { useEffect } from "react";
+import {
+  setupSocket,
+  listenToMasterAdded,
+  disconnectSocket,
+} from "../utility/socket";
 
 const useSocket = (onMasterAdded) => {
   useEffect(() => {
