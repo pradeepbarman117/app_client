@@ -18,7 +18,7 @@ const Home = () => {
     }
 
     console.log('home rendered');
-
+      
     return (
         <>
             {/* <div className="layout-content-container flex flex-col flex-1"> */}
@@ -208,9 +208,6 @@ const Home = () => {
                     }}
                 />
             </div>
-            {/* </div> */}
-
-            
         </>
     )
 }

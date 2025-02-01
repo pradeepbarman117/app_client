@@ -7,7 +7,7 @@ const Layout = () => {
     <>
       <div className="layout_container flex min-h-screen max-w-screen-2xl mx-auto">
         <SidebarNav />
-        <div className="layout-content-container flex flex-col flex-1">
+        <div className="layout-content-container flex flex-col flex-1 px-4">
           <Outlet />
         </div>
         <Toaster/>

@@ -8,6 +8,8 @@ import Login from "../components/common/login/Login";
 import PublicRoute from "./PublicRoute";
 import MasterPage from "../pages/master/MasterPage";
 import MasterDetailsPage from "../pages/master/MasterDetailsPage";
+import UserPage from "../pages/user/UserPage";
+import MasterDetailsForm from "../components/master/details/forms/MasterDetailsForm";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+        metaData:{
+          title: "Home Page",
+          description: "This is home page",
+        }
       },
       {
         path: "/users",
@@ -36,11 +42,11 @@ const router = createBrowserRouter([
             children:[
               {
                 path: "users",
-                element: <div>user</div>,
+                element: <UserPage/>,
               },
               {
                 path: "overview",
-                element: <div>edit</div>,
+                element:<MasterDetailsForm/>,
               }
             ]
           },

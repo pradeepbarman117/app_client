@@ -12,6 +12,7 @@ const CreateMaster = () => {
         initialValues: {
             name: '',
             email: '',
+            userId:'',
             password: '',
             passcode: '',
             percent: '',
@@ -42,7 +43,7 @@ const CreateMaster = () => {
     return (
         <>
             <div className="flex justify-center px-4 py-5 flex-1">
-                <div className="layout-content-container flex flex-col w-[512px] max-w-[512px] py-5">
+                <div className="layout-content-container flex flex-col w-[512px] max-w-[512px] py-5 font-poppins-thin">
                     <form onSubmit={formik.handleSubmit}>
 
                         {/* Email input */}
@@ -84,6 +85,27 @@ const CreateMaster = () => {
                                 />
                                 {formik.touched.email && formik.errors.email && (
                                     <div className="text-red-500 text-sm">{formik.errors.email}</div>
+                                )}
+                            </label>
+                        </div>
+
+                        {/* UserId input */}
+                        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-1">
+                            <label className="flex flex-col min-w-40 flex-1">
+                                <p className="text-[#0e161b] text-base font-medium leading-normal pb-2">
+                                    User Id
+                                </p>
+                                <input
+                                    type="text"
+                                    name="userId"
+                                    placeholder="Pradeep@2024"
+                                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#0e161b] focus:outline-0 focus:ring-0 border border-[#d1dde6] bg-[#E8EDF2] focus:border-[#d1dde6] h-14 placeholder:text-[#507a95] p-[15px] text-base font-normal leading-normal"
+                                    value={formik.values.userId}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                />
+                                {formik.touched.userId && formik.errors.userId && (
+                                    <div className="text-red-500 text-sm">{formik.errors.userId}</div>
                                 )}
                             </label>
                         </div>
