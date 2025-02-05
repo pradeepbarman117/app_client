@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const MasterPagination = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 10; // Modify based on your data
+  const totalPages = 5; // Modify based on your data
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -11,7 +11,7 @@ const MasterPagination = () => {
   };
 
   return (
-    <ul className="inline-flex -space-x-px text-sm">
+    <ul className="inline-flex -space-x-px text-sm mt-3">
       <li>
         <button
           onClick={() => handlePageChange(currentPage - 1)}

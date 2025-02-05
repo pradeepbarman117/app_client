@@ -1,0 +1,8 @@
+@media (max-width:767px) {
+    .dashboard_heading{
+        font-size: 18px;
+    }
+    .dashboard_stats_heading{
+        font-size: 14px;
+    }
+}   

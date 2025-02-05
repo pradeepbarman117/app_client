@@ -1,0 +1,59 @@
+import { Wallet } from "lucide-react";
+import PropTypes from "prop-types";
+
+const Headers = ({ setIsOpen, isOpen }) => {
+  return (
+    <header className="fixed top-0 w-full bg-white z-30 shadow">
+      <nav className="border-gray-200 px-4 lg:px-6 py-2.5 ">
+        <div className="flex flex-wrap justify-between items-center max-w-screen-2xl mx-auto px-4">
+          <a href="#" className="flex items-center">
+            <img
+              src="https://flowbite.com/docs/images/logo.svg"
+              className="mr-3 h-6 sm:h-9"
+              alt="Flowbite Logo"
+            />
+          </a>
+          <div className="flex justify-end lg:order-2">
+            <div className="flex items-center bg-gray-800 rounded px-3 py-2">
+              <Wallet className="w-5 h-5 text-yellow-500 mr-2" />
+              <span className="font-medium glow-text text-yellow-500">
+                $1000
+              </span>
+            </div>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              data-collapse-toggle="mobile-menu-2"
+              type="button"
+              className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+              aria-controls="mobile-menu-2"
+              aria-expanded="false"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
+            </button>
+            
+          </div>
+        </div>
+      </nav>
+    </header>
+  );
+};
+
+Headers.propTypes = {
+  setIsOpen: PropTypes.func.isRequired,
+  isOpen:PropTypes.bool.isRequired
+};
+
+export default Headers;

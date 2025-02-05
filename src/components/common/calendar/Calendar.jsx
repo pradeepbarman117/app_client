@@ -143,7 +143,7 @@ const Calendar = ({ setRecieveDate }) => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center">
       <div className="max-w-sm w-full relative">
         <div className="flex border rounded-lg items-center ps-3">
           <svg
