@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { NavLink } from "react-router-dom"
 import SidebarSkeletor from "./SidebarSkeletor"
+import PropTypes from "prop-types";
 
-const SidebarNav = () => {
+const SidebarNav = ({isOpen}) => {
 
     const [loading, setLoading] = useState(true);
 
@@ -22,8 +23,8 @@ const SidebarNav = () => {
 
     return (
         <>
-            <div className="layout-content-container flex flex-col w-80 pt-20">
-                <div className="flex h-full min-h-[700px] flex-col justify-between p-4">
+            <div className={`pointer-events-none z-10 layout-content-container flex-col w-full py-14 lg:flex shadow fixed top-0 h-full ${isOpen ? null : 'hidden'}`}>
+                <div className="flex h-screen flex-col justify-between p-4 w-72 bg-white pointer-events-auto">
                     <div className="flex flex-col gap-4">
                         <div className="flex flex-col gap-2">
                             <NavLink to={'/'} className={({ isActive }) => isActive ? `bg-[#F0F2F5] rounded-xl` : undefined }>
@@ -150,5 +151,8 @@ const SidebarNav = () => {
 }
 
 
+SidebarNav.propTypes = {
+    isOpen:PropTypes.bool.isRequired
+}
 
 export default SidebarNav
