@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { NavLink } from "react-router-dom"
 import SidebarSkeletor from "./SidebarSkeletor"
 import PropTypes from "prop-types";
+import { IndianRupee } from "lucide-react";
 
 const SidebarNav = ({isOpen}) => {
 
@@ -70,6 +71,21 @@ const SidebarNav = ({isOpen}) => {
                                     </div>
                                     <p className="text-[#121417] text-sm font-medium leading-normal">
                                         Users
+                                    </p>
+                                </div>
+                            </NavLink>
+                            <NavLink to={'/payments'} className={({ isActive }) => isActive ? `bg-[#F0F2F5] rounded-xl` : undefined }>
+                                <div className="flex items-center gap-3 px-3 py-2">
+                                    <div
+                                        className="text-[#121417]"
+                                        data-icon="CreditCard"
+                                        data-size="24px"
+                                        data-weight="regular"
+                                    >
+                                        <IndianRupee className="size-5"/>
+                                    </div>
+                                    <p className="text-[#121417] text-sm font-medium leading-normal">
+                                        Payments
                                     </p>
                                 </div>
                             </NavLink>
