@@ -7,16 +7,18 @@ import { useQueryClient } from "@tanstack/react-query";
 import socketManager from "../../../services/socket/socket";
 
 const Headers = ({ setIsOpen, isOpen }) => {
+  
   const { data } = useAdminBalance();
-  console.log(data);
   const queryClient = useQueryClient();
   // adminBalanceUpdate
 
   useEffect(() => {
+    const adminId = JSON.parse(localStorage.getItem('user'));
     socketManager.connect();
-    socketManager.io.on("adminBalanceUpdate", (updatedAdmin) => {
-      console.log(updatedAdmin, "updatedAdmin");
-    });
+    socketManager.io.emit("register", adminId);
+    socketManager.io.on('adminBalanceUpdate',(adminBalance)=>{
+      console.log(adminBalance,'adminBalance') // 3000.00 
+    })
   }, [queryClient]);
 
   return (

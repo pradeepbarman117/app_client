@@ -38,9 +38,10 @@ const AuthProvider = ({ children }) => {
         Cookies.set("token", response.data.token);
         setToken(response.data.token);
       }
+      localStorage.setItem("user", JSON.stringify(response.data.user.id));
     } catch (err) {
       console.log(err);
-      toast.error('Something Went Wrong');
+      toast.error("Something Went Wrong");
     }
   };
 

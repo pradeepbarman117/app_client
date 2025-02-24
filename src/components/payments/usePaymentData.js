@@ -13,7 +13,7 @@ export const usePaymentData = () => {
 
   const filteredRequest = useMemo(() => {
     if (!data?.data) return [];
-  
+    console.log(data,'filteredRequestData')
     return data.data.filter((items) => {
       const requestId = items.requestId.toString().toLowerCase();
       const userId = items?.masterList?.userId?.toString().toLowerCase() || "";
@@ -39,6 +39,7 @@ export const usePaymentData = () => {
   useEffect(() => {
     
     const handlePaymentAdded = (updatedPayment) => {
+      console.log(updatedPayment,'updatedPayment');
       setNewlyAddedId(updatedPayment);
       setTimeout(() => setNewlyAddedId(null), 1000);
       queryClient.setQueryData(["request/master"], (oldData) => {
@@ -57,12 +58,12 @@ export const usePaymentData = () => {
     };
 
     socketManager.connect();
-    socketManager.io.on("masterRequestAdded", handlePaymentAdded);
-    socketManager.io.on("masterRequestUpdated", handlePaymentAdded);
+    socketManager.io.on("adminMasterRequestAdded", handlePaymentAdded);
+    socketManager.io.on("adminMasterRequestUpdated", handlePaymentAdded);
 
     return () => {
-      socketManager.io.off("masterRequestAdded", handlePaymentAdded);
-      socketManager.io.off("masterRequestUpdated", handlePaymentAdded);
+      socketManager.io.off("adminMasterRequestAdded", handlePaymentAdded);
+      socketManager.io.off("adminMasterRequestUpdated", handlePaymentAdded);
     };
   }, [queryClient]);
 
