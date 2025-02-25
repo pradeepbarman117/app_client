@@ -45,6 +45,9 @@ const PaymentTable = ({ fileredData }) => {
               <th className="px-4 py-3  text-[#121417] text-sm w-[200px] font-medium leading-normal text-left">
                 Status
               </th>
+              {/* <th className="px-4 py-3  text-[#121417] text-sm w-[200px] font-medium leading-normal text-left">
+                Comment
+              </th> */}
               <th className="px-4 py-3  text-[#121417] text-sm w-[200px] font-medium leading-normal text-left">
                 Action
               </th>
@@ -78,6 +81,9 @@ const PaymentTable = ({ fileredData }) => {
                       {items.status}
                     </span>
                   </td>
+                  {/* <td className="h-[72px] px-4 py-2 text-[#121417] text-sm font-normal leading-normal">
+                    Waiting...
+                  </td> */}
                   <td className="h-[72px] px-4 py-2 text-[#121417] text-sm font-normal leading-normal">
                     {getStatus(items.status) ? (
                       <span
@@ -145,6 +151,15 @@ const PaymentTable = ({ fileredData }) => {
                 </tr>
               );
             })}
+            {
+              (fileredData?.length === 0) && (
+                <tr className="border-t border-t-[#DBE0E5]">
+                  <td className="h-[72px] px-4 py-2 text-[#61788A] text-sm font-normal leading-normal">
+                    No Data Found
+                  </td>
+                </tr>
+              )
+            }
           </tbody>
         </table>
       </div>

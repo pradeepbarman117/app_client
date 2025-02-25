@@ -3,29 +3,44 @@ import Calendar from "../common/calendar/Calendar";
 import PaymentSearch from "./search/PaymentSearch";
 import PaymentTable from "./table/PaymentTable";
 import { usePaymentData } from "./usePaymentData";
+import AmountCard from "../common/amount-card/AmountCard";
 
 const Payments = () => {
-
-  const { filteredRequest, setSearchInput, setRecieveDate, searchInput } = usePaymentData();
-
+  const {
+    filteredRequest,
+    setSearchInput,
+    setRecieveDate,
+    searchInput,
+    setFilterTag,
+    amountDetails,
+  } = usePaymentData();
 
   const [activeTab, setActiveTab] = useState(1);
   const tabsData = [
     {
       id: 1,
-      name: "Pending",
+      name: "pending",
     },
     {
       id: 2,
-      name: "Approved",
+      name: "approved",
     },
     {
       id: 3,
-      name: "Rejected",
+      name: "rejected",
     },
   ];
+
+  const handleFilterTag = (id, name) => {
+    setActiveTab(id);
+    setFilterTag(name);
+  };
+
   return (
     <>
+      <div className="mt-3">
+        <AmountCard amountDetails={amountDetails} />
+      </div>
       <div className="flex flex-col md:flex-row justify-between mt-3 pb-4 gap-3">
         <Calendar setRecieveDate={setRecieveDate} />
 
@@ -40,11 +55,11 @@ const Payments = () => {
                       ? "text-blue-600 border-b-2 border-blue-600"
                       : "text-gray-500"
                   }`}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => handleFilterTag(tab.id, tab.name)}
                 >
                   <a
                     href="#"
-                    className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300"
+                    className="inline-block p-4 capitalize border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300"
                   >
                     {tab.name}
                   </a>

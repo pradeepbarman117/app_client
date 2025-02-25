@@ -12,14 +12,44 @@ const Headers = ({ setIsOpen, isOpen }) => {
   const queryClient = useQueryClient();
   // adminBalanceUpdate
 
+  // useEffect(() => {
+  //   const adminId = JSON.parse(localStorage.getItem('user'));
+  //   socketManager.connect();
+  //   socketManager.io.emit("register", adminId);
+  //   socketManager.io.on('adminBalanceUpdate', (adminBalance) => {
+      
+  //   });
+  // }, [queryClient]);
+
+
   useEffect(() => {
     const adminId = JSON.parse(localStorage.getItem('user'));
     socketManager.connect();
     socketManager.io.emit("register", adminId);
-    socketManager.io.on('adminBalanceUpdate',(adminBalance)=>{
-      console.log(adminBalance,'adminBalance') // 3000.00 
-    })
+    
+    socketManager.io.on('adminBalanceUpdate', (adminBalance) => {
+      queryClient.setQueryData(['admin/balance'], (oldData) => {
+        if (!oldData?.data) {
+          // If there's no existing data, create a minimal structure
+          return { data: { balance: adminBalance } };
+        }
+        // Merge the new balance into the existing data.data object
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            balance: adminBalance // e.g., 3000.50
+          }
+        };
+      });
+    });
+  
+    // Cleanup socket listeners on unmount
+    return () => {
+      socketManager.io.off('adminBalanceUpdate');
+    };
   }, [queryClient]);
+
 
   return (
     <header className="fixed top-0 w-full bg-white z-30 shadow">

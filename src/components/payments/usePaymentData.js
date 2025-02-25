@@ -7,49 +7,83 @@ export const usePaymentData = () => {
   const [searchInput, setSearchInput] = useState("");
   const [recieveDate, setRecieveDate] = useState({ start: "", end: "" });
   const [newlyAddedId, setNewlyAddedId] = useState(null);
+  const [filterTag, setFilterTag] = useState("pending");
+  const [amountDetails, setAmountDetails] = useState({
+    total: "",
+    approved: "",
+    pending: "",
+    rejected: "",
+  });
 
   const queryClient = useQueryClient();
   const { data, isLoading } = useMasterRequestQuery();
 
+  // Memoized filtering logic
   const filteredRequest = useMemo(() => {
     if (!data?.data) return [];
-    console.log(data,'filteredRequestData')
+
     return data.data.filter((items) => {
       const requestId = items.requestId.toString().toLowerCase();
       const userId = items?.masterList?.userId?.toString().toLowerCase() || "";
       const search = searchInput.toLowerCase();
-  
-      const matchesSearch = requestId.includes(search) || userId.includes(search);
-  
+
+      const matchesFilter = items.status === filterTag;
+      const matchesSearch =
+        requestId.includes(search) || userId.includes(search);
+      const combinedMatch = matchesFilter && (search ? matchesSearch : true);
+
       if (!recieveDate.start || !recieveDate.end) {
-        return matchesSearch;
+        return combinedMatch;
       }
-  
+
       const startDate = new Date(recieveDate.start);
       const endDate = new Date(recieveDate.end);
-      endDate.setHours(23, 59, 59, 999); // Ensure the full end date is included
-  
-      const itemDate = new Date(items.createdAt);
-  
-      return (itemDate >= startDate && itemDate <= endDate) && matchesSearch;
-    });
-  }, [data, recieveDate.start, recieveDate.end, searchInput]);
+      endDate.setHours(23, 59, 59, 999); // Full end date
 
+      const itemDate = new Date(items.createdAt);
+
+      return itemDate >= startDate && itemDate <= endDate && combinedMatch;
+    });
+  }, [data, recieveDate.start, recieveDate.end, searchInput, filterTag]);
+
+  // Effect to calculate amount details based on status
+  useEffect(() => {
+    if (!data?.data) return;
+
+    const totals = data.data.reduce(
+      (acc, item) => {
+        // Assuming each item has an 'amount' field; adjust if the field name differs
+        const amount = Number(item.amount) || 0; // Convert to number, default to 0 if undefined
+
+        acc.total += amount;
+        if (item.status === "approved") acc.approved += amount;
+        if (item.status === "pending") acc.pending += amount;
+        if (item.status === "rejected") acc.rejected += amount;
+
+        return acc;
+      },
+      { total: 0, approved: 0, pending: 0, rejected: 0 }
+    );
+
+    setAmountDetails(totals);
+  }, [data]); // Runs whenever data changes
 
   useEffect(() => {
-    
     const handlePaymentAdded = (updatedPayment) => {
-      console.log(updatedPayment,'updatedPayment');
       setNewlyAddedId(updatedPayment);
       setTimeout(() => setNewlyAddedId(null), 1000);
       queryClient.setQueryData(["request/master"], (oldData) => {
         if (!oldData) return { data: [updatedPayment] };
-        const existingPaymentIndex = oldData.data.findIndex((master) => master.id === updatedPayment.id);
+        const existingPaymentIndex = oldData.data.findIndex(
+          (master) => master.id === updatedPayment.id
+        );
         if (existingPaymentIndex !== -1) {
           return {
             ...oldData,
             data: oldData.data.map((payment, index) =>
-              index === existingPaymentIndex ? { ...payment, ...updatedPayment } : payment
+              index === existingPaymentIndex
+                ? { ...payment, ...updatedPayment }
+                : payment
             ),
           };
         }
@@ -75,6 +109,8 @@ export const usePaymentData = () => {
     setSearchInput,
     setRecieveDate,
     recieveDate,
-    newlyAddedId
+    newlyAddedId,
+    setFilterTag,
+    amountDetails
   };
 };
