@@ -10,6 +10,7 @@ import MasterPage from "../pages/master/MasterPage";
 import MasterDetailsPage from "../pages/master/MasterDetailsPage";
 import UserPage from "../pages/user/UserPage";
 import MasterDetailsForm from "../components/master/details/forms/MasterDetailsForm";
+import PaymentPage from '../pages/payments/PaymentPage'
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
           },
         ]
       },
+      {
+        path: "/Payments",
+        element: <PaymentPage/>,
+      }
     ],
   },
   {
