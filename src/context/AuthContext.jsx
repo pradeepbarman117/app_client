@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import { authServices } from "../services/auth/authServices";
 import Cookies from "js-cookie";
 import PropTypes from "prop-types"; // ES6
+import toast from "react-hot-toast";
 
 const AuthContext = createContext(null);
 
@@ -19,7 +20,7 @@ const AuthProvider = ({ children }) => {
             setToken(token);
           }
         } catch (err) {
-          console.log(err,'token error');
+          console.log(err, "token error");
           setLoading(false);
           Cookies.remove("token");
         }
@@ -37,8 +38,10 @@ const AuthProvider = ({ children }) => {
         Cookies.set("token", response.data.token);
         setToken(response.data.token);
       }
+      localStorage.setItem("user", JSON.stringify(response.data.user.id));
     } catch (err) {
       console.log(err);
+      toast.error("Something Went Wrong");
     }
   };
 

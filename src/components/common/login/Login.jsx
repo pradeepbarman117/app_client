@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import loginSchema from '../../../utils/validation/forms/loginValidator';
 import { allowOnly } from '../../../utils/validation/allowOnly';
 import { useAuth } from '../../../hooks/useAuth';
+import { Toaster } from 'react-hot-toast';
 
 const Login = () => {
 
@@ -193,6 +194,7 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+            <Toaster/>
         </>
     );
 };
