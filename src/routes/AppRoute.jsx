@@ -11,6 +11,7 @@ import MasterDetailsPage from "../pages/master/MasterDetailsPage";
 import UserPage from "../pages/user/UserPage";
 import MasterDetailsForm from "../components/master/details/forms/MasterDetailsForm";
 import PaymentPage from '../pages/payments/PaymentPage'
+import MasterUserPage from "../pages/master/MasterUserPage";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/users",
-        element: <div>user</div>,
+        element: <UserPage/>,
       },
       {
         path: "/masters",
@@ -43,7 +44,7 @@ const router = createBrowserRouter([
             children:[
               {
                 path: "users",
-                element: <UserPage/>,
+                element: <MasterUserPage/>,
               },
               {
                 path: "overview",

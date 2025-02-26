@@ -8,6 +8,13 @@ const userServices = {
                 'Authorization': `Bearer ${token}`,
             }
         });
+    },
+    getAll:(token)=>{
+        return api.get(`/user/get`,{
+            headers:{
+                'Authorization': `Bearer ${token}`,
+            }
+        })
     }
 }
 

@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { useUserQuery } from "../../queries/user/getAllUser";
+import { useParams } from "react-router-dom";
 import UserTableSkeleton from "./UserTableSkeleton";
-import UserCalendar from "./filters/UserCalendar";
-import UserSearch from "./filters/UserSearch";
-import dateFormator from "../../hooks/dateFormator";
+import { useUserByMasterId } from "../../../queries/user/getUser";
+import dateFormator from "../../../hooks/dateFormator";
+import MasterUserCalendar from "../../user/filters/UserCalendar";
+import UserSearch from "../../user/filters/UserSearch";
 
-const UserTable = () => {
-  const { data, isLoading } = useUserQuery();
-  console.log(data?.data,'data');
+const MasterUserTable = () => {
+  const { id } = useParams();
+  const { data, isLoading } = useUserByMasterId(id);
   const [searchTerm, setSearchTerm] = useState("");
   const [date, setDate] = useState({
     start: "",
@@ -35,7 +36,7 @@ const UserTable = () => {
   return (
     <div className="relative">
       <div className="pe-4 flex justify-between my-4">
-        <UserCalendar setRecieveDate={setDate} />
+        <MasterUserCalendar setRecieveDate={setDate} />
         <UserSearch setSearchTerm={setSearchTerm}/> 
       </div>
       <div className="flex overflow-hidden rounded-xl border border-[#DBE0E5] relative ">
@@ -52,7 +53,7 @@ const UserTable = () => {
                 User Id
               </th>
               <th scope="col" className="px-6 py-3">
-                Balance
+                Coin
               </th>
               <th scope="col" className="px-6 py-3">
                 Status
@@ -85,7 +86,7 @@ const UserTable = () => {
                     <div className="flex items-center">{items.userId}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center">₹{items.balance}</div>
+                    <div className="flex items-center">₹{items.coin}</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center">
@@ -121,4 +122,4 @@ const UserTable = () => {
   );
 };
 
-export default UserTable;
+export default MasterUserTable;
