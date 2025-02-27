@@ -1,32 +1,9 @@
-import { useState } from "react";
-import { useUserQuery } from "../../queries/user/getAllUser";
-import UserTableSkeleton from "./UserTableSkeleton";
-import UserCalendar from "./filters/UserCalendar";
-import UserSearch from "./filters/UserSearch";
 import dateFormator from "../../hooks/dateFormator";
+import { NavLink } from "react-router-dom";
+import PropTypes from "prop-types";
+import UserTableSkeleton from "./UserTableSkeleton";
 
-const UserTable = () => {
-  const { data, isLoading } = useUserQuery();
-  console.log(data?.data,'data');
-  const [searchTerm, setSearchTerm] = useState("");
-  const [date, setDate] = useState({
-    start: "",
-    end: "",
-  });
-
-  const filterUsers = data?.data.filter((items) => {
-    if (!date.start || !date.end) {
-      return items.userId.toLowerCase().includes(searchTerm.toLowerCase());
-    }
-
-    const startDate = new Date(date.start);
-    const endDate = new Date(date.end);
-
-    data?.data.filter((items) => {
-      const itemDate = new Date(items.createdAt);
-      return itemDate >= startDate && itemDate <= endDate;
-    });
-  });
+const UserTable = ({filteredData, isLoading, newUser}) => {
 
   if (isLoading) {
     return <UserTableSkeleton />;
@@ -34,10 +11,6 @@ const UserTable = () => {
 
   return (
     <div className="relative">
-      <div className="pe-4 flex justify-between my-4">
-        <UserCalendar setRecieveDate={setDate} />
-        <UserSearch setSearchTerm={setSearchTerm}/> 
-      </div>
       <div className="flex overflow-hidden rounded-xl border border-[#DBE0E5] relative ">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">
@@ -66,11 +39,11 @@ const UserTable = () => {
             </tr>
           </thead>
           <tbody>
-            {filterUsers?.map((items) => {
+            {filteredData?.map((items) => {
               return (
                 <tr
                   key={items.id}
-                  className="bg-white border-b hover:bg-gray-50"
+                  className={`bg-white border-b hover:bg-gray-50  ${newUser?.id === items.id && "flash"}`}
                 >
                   <th
                     scope="row"
@@ -93,7 +66,11 @@ const UserTable = () => {
                       Online
                     </div>
                   </td>
-                  <td className="px-6 py-4">{items?.master?.name}</td>
+                  <td className="px-6 py-4">
+                    <NavLink to={`/masters/${items?.master?.id}/overview`} target="_blank" className={'underline text-blue-500'}>
+                      {items?.master?.name}
+                    </NavLink>
+                  </td>
                   <td className="px-6 py-4">
                     <a
                       href="#"
@@ -108,7 +85,7 @@ const UserTable = () => {
                 </tr>
               );
             })}
-            {filterUsers.length === 0 && (
+            {filteredData.length === 0 && (
               <tr>
                 <td className="px-6 py-4">No Data Found</td>
               </tr>
@@ -120,5 +97,11 @@ const UserTable = () => {
     </div>
   );
 };
+
+UserTable.propTypes = {
+  filteredData: PropTypes.array,
+  isLoading: PropTypes.bool,
+  newUser: PropTypes.object,
+}
 
 export default UserTable;
