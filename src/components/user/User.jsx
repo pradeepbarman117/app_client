@@ -1,3 +1,4 @@
+import UserCardDetails from "./card/UserCardDetails";
 import UserCalendar from "./filters/UserCalendar";
 import UserSearch from "./filters/UserSearch";
 import UserTable from "./UserTable";
@@ -9,6 +10,7 @@ const User = () => {
 
   return (
     <>
+      <UserCardDetails/>
       <div className="pe-4 flex justify-between my-4">
         <UserCalendar setRecieveDate={setRecieveDate} />
         <UserSearch setSearchTerm={setSearchInput} />
