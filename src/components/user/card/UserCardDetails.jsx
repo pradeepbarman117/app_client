@@ -4,10 +4,11 @@ import {
   UserRoundX,
   Wifi,
 } from "lucide-react";
-import PropTypes from "prop-types";
 import formatIndianNumber from '../../../utility/currencyFormator'
 
-const UserCardDetails = ({ userDetails }) => {
+const UserCardDetails = () => {
+
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-4">
       <div className="flex flex-col gap-3 rounded-xl p-6 bg-blue-100 hover:bg-blue-200 transition-colors">
@@ -16,7 +17,7 @@ const UserCardDetails = ({ userDetails }) => {
           <Users className="text-blue-500 w-6 h-6" />
         </div>
         <p className="text-blue-900 tracking-tight text-2xl font-bold flex items-center">
-          {formatIndianNumber(userDetails?.total || 20000)}
+          {/* {formatIndianNumber(userDetails?.total || 20000)} */}
         </p>
       </div>
 
@@ -26,7 +27,7 @@ const UserCardDetails = ({ userDetails }) => {
           <UserRoundCheck className="text-green-500 w-6 h-6" />
         </div>
         <p className="text-green-900 tracking-tight text-2xl font-bold flex items-center">
-          {formatIndianNumber(userDetails?.approved || 17000)}
+          {/* {formatIndianNumber(userDetails?.approved || 17000)} */}
         </p>
       </div>
 
@@ -36,7 +37,7 @@ const UserCardDetails = ({ userDetails }) => {
           <UserRoundX className="text-red-500 w-6 h-6" />
         </div>
         <p className="text-red-900 tracking-tight text-2xl font-bold flex items-center">
-          {formatIndianNumber(userDetails?.rejected || 3000)}
+          {/* {formatIndianNumber(userDetails?.rejected || 3000)} */}
         </p>
       </div>
 
@@ -47,15 +48,12 @@ const UserCardDetails = ({ userDetails }) => {
         </div>
         <p className="text-purple-500 tracking-tight text-2xl font-bold flex items-center">
           {/* <IndianRupee strokeWidth={2.5} className="w-5 h-5 mr-1" /> */}
-          {formatIndianNumber(userDetails?.online || 6540 )}
+          {/* {formatIndianNumber(userDetails?.online || 6540 )} */}
         </p>
       </div>
     </div>
   );
 };
 
-UserCardDetails.propTypes = {
-  userDetails: PropTypes.object.isRequired,
-};
 
 export default UserCardDetails;
