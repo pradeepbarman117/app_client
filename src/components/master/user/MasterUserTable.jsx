@@ -86,7 +86,7 @@ const MasterUserTable = () => {
                     <div className="flex items-center">{items.userId}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center">₹{items.coin}</div>
+                    <div className="flex items-center">₹{items.balance}</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center">

@@ -4,6 +4,7 @@ import PaymentSearch from "./search/PaymentSearch";
 import PaymentTable from "./table/PaymentTable";
 import { usePaymentData } from "./usePaymentData";
 import AmountCard from "../common/amount-card/AmountCard";
+import { useBalanceData } from "./useBalanceData";
 
 const Payments = () => {
   const {
@@ -12,10 +13,11 @@ const Payments = () => {
     setRecieveDate,
     searchInput,
     setFilterTag,
-    amountDetails,
   } = usePaymentData();
+  const { amountDetails } = useBalanceData();
 
   const [activeTab, setActiveTab] = useState(1);
+
   const tabsData = [
     {
       id: 1,
