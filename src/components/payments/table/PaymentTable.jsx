@@ -5,8 +5,7 @@ import { useState } from "react";
 import RequestAcceptModal from "../modal/RequestAcceptModal";
 
 const PaymentTable = ({ fileredData }) => {
-  const [isAcceptModal, setIsAcceptModal] = useState(false);
-
+  const [isAcceptModal, setIsAcceptModal] = useState(false)
   const [requestData, setRequestData] = useState({
     status: "pending",
     requestId: null,
@@ -30,6 +29,9 @@ const PaymentTable = ({ fileredData }) => {
         <table className="w-full table-fixed">
           <thead className="sticky top-0 bg-[#F0F2F5]">
             <tr className="">
+              <th className="px-4 py-3 text-left text-[#121417] text-sm w-[100px] font-medium leading-normal">
+                Serial
+              </th>
               <th className="px-4 py-3 text-left text-[#121417] text-sm w-[200px] font-medium leading-normal">
                 Date
               </th>
@@ -54,9 +56,12 @@ const PaymentTable = ({ fileredData }) => {
             </tr>
           </thead>
           <tbody>
-            {fileredData?.map((items) => {
+            {fileredData?.map((items,index) => {
               return (
                 <tr key={items.id} className="border-t border-t-[#DBE0E5]">
+                  <td className="h-[72px] px-4 py-2 text-[#121417] text-sm font-normal leading-normal">
+                    #{index + 1}
+                  </td>
                   <td className="h-[72px] px-4 py-2 text-[#61788A] text-sm font-normal leading-normal">
                     {dateFormator(items.createdAt)}
                   </td>
@@ -87,12 +92,12 @@ const PaymentTable = ({ fileredData }) => {
                   <td className="h-[72px] px-4 py-2 text-[#121417] text-sm font-normal leading-normal">
                     {getStatus(items.status) ? (
                       <span
-                      className={`text-xs font-medium me-2 w-[70px] py-2 px-2 items-center justify-center flex rounded-md
+                        className={`text-xs font-medium me-2 w-[70px] py-2 px-2 items-center justify-center flex rounded-md
                         bg-blue-100 text-blue-800 cursor-pointer
                       `}
-                    >
-                      Change
-                    </span>
+                      >
+                        Change
+                      </span>
                     ) : (
                       <div className="flex items-center gap-2">
                         <span
@@ -151,15 +156,13 @@ const PaymentTable = ({ fileredData }) => {
                 </tr>
               );
             })}
-            {
-              (fileredData?.length === 0) && (
-                <tr className="border-t border-t-[#DBE0E5]">
-                  <td className="h-[72px] px-4 py-2 text-[#61788A] text-sm font-normal leading-normal">
-                    No Data Found
-                  </td>
-                </tr>
-              )
-            }
+            {fileredData?.length === 0 && (
+              <tr className="border-t border-t-[#DBE0E5]">
+                <td className="h-[72px] px-4 py-2 text-[#61788A] text-sm font-normal leading-normal">
+                  No Data Found
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -7,12 +7,12 @@ export const usePaymentData = () => {
   const [searchInput, setSearchInput] = useState("");
   const [recieveDate, setRecieveDate] = useState({ start: "", end: "" });
   const [newlyAddedId, setNewlyAddedId] = useState(null);
-  const [filterTag, setFilterTag] = useState("pending");
+  const [filterTag, setFilterTag] = useState("all");
   
 
   const queryClient = useQueryClient();
   const { data, isLoading } = useMasterRequestQuery();
-
+  let paginations = data?.pagination
   // Memoized filtering logic
   const filteredRequest = useMemo(() => {
     if (!data?.data) return [];
@@ -22,7 +22,7 @@ export const usePaymentData = () => {
       const userId = items?.masterList?.userId?.toString().toLowerCase() || "";
       const search = searchInput.toLowerCase();
 
-      const matchesFilter = items.status === filterTag;
+      const matchesFilter = filterTag === "all" ? true : items.status === filterTag;
       const matchesSearch =
         requestId.includes(search) || userId.includes(search);
       const combinedMatch = matchesFilter && (search ? matchesSearch : true);
@@ -84,5 +84,6 @@ export const usePaymentData = () => {
     recieveDate,
     newlyAddedId,
     setFilterTag,
+    paginations
   };
 };
