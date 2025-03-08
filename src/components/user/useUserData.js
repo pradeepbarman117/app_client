@@ -2,34 +2,43 @@ import { useState, useEffect, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUserQuery } from "../../queries/user/getAllUser";
 import socketManager from "../../services/socket/socket";
+import useDebounce from "../../hooks/useDebounce";
 
 export const useUserData = () => {
   const [searchInput, setSearchInput] = useState("");
   const [recieveDate, setRecieveDate] = useState({ start: "", end: "" });
   const [newlyAddedId, setNewlyAddedId] = useState(null);
-  const [filterTag, setFilterTag] = useState('pending');
-  const [amountDetails, setAmountDetails] = useState({
-    total:'',
-    approved:'',
-    pending:'',
-    rejected:'',
-  });
+  const [deepSearch, setDeepSearch] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const queryClient = useQueryClient();
-  const { data, isLoading } = useUserQuery();
+  const debouncedSearchInput = useDebounce(searchInput, 500);
+
+  const { data, isLoading } = useUserQuery(
+    currentPage,
+    deepSearch && debouncedSearchInput ? debouncedSearchInput : null
+  );
+
+  // Pagination data from backend
+  const paginations = {
+    currentPage: data?.pagination?.currentPage || 1,
+    totalPages: data?.pagination?.totalPages || 1,
+    totalItems: data?.pagination?.totalItems || 0,
+    setCurrentPage,
+  };
 
   // Memoized filtering logic
   const filteredUserData = useMemo(() => {
     if (!data?.data) return [];
 
     return data.data.filter((items) => {
-      const requestId = items.userId.toString().toLowerCase();
-      const userId = items?.masterList?.userId?.toString().toLowerCase() || "";
+      const userId = items.userId.toString().toLowerCase();
       const search = searchInput.toLowerCase();
-      
-    //   const matchesFilter = items.status === filterTag; 
-      const matchesSearch = requestId.includes(search) || userId.includes(search);
-      const combinedMatch = (search ? matchesSearch : true);
+
+      const matchesSearch = deepSearch
+        ? true // Backend handles userId search
+        : userId.includes(search); // Client-side search when deepSearch is false
+      const combinedMatch = search ? matchesSearch : true;
 
       if (!recieveDate.start || !recieveDate.end) {
         return combinedMatch;
@@ -37,37 +46,13 @@ export const useUserData = () => {
 
       const startDate = new Date(recieveDate.start);
       const endDate = new Date(recieveDate.end);
-      endDate.setHours(23, 59, 59, 999); // Full end date
+      endDate.setHours(23, 59, 59, 999);
 
       const itemDate = new Date(items.createdAt);
 
-      return (itemDate >= startDate && itemDate <= endDate) && combinedMatch;
+      return itemDate >= startDate && itemDate <= endDate && combinedMatch;
     });
-  }, [data, recieveDate.start, recieveDate.end, searchInput]);
-
-  // Effect to calculate amount details based on status
-  useEffect(() => {
-    if (!data?.data) return;
-    
-    const totals = data.data.reduce(
-      (acc, item) => {
-        // Assuming each item has an 'amount' field; adjust if the field name differs
-        const amount = Number(item.amount) || 0; // Convert to number, default to 0 if undefined
-
-        acc.total += amount;
-        if (item.status === 'approved') acc.approved += amount;
-        if (item.status === 'pending') acc.pending += amount;
-        if (item.status === 'rejected') acc.rejected += amount;
-
-        return acc;
-      },
-      { total: 0, approved: 0, pending: 0, rejected: 0 }
-    );
-
-    setAmountDetails(totals);
-  }, [data]); // Runs whenever data changes
-
-
+  }, [data, recieveDate.start, recieveDate.end, searchInput, deepSearch]);
 
   useEffect(() => {
     const masterId = JSON.parse(localStorage.getItem("user"));
@@ -77,37 +62,39 @@ export const useUserData = () => {
       return;
     }
 
-    const handlePaymentAdded = (updatedPayment) => {
-      console.log(updatedPayment,'updatedPayment')
-      setNewlyAddedId(updatedPayment);
+    const handlePaymentAdded = (updatedUser) => {
+      setNewlyAddedId(updatedUser);
       setTimeout(() => setNewlyAddedId(null), 1000);
-      queryClient.setQueryData(["getUser/all"], (oldData) => {
-        if (!oldData) return { data: [updatedPayment] };
-        const existingPaymentIndex = oldData.data.findIndex(
-          (master) => master.id === updatedPayment.id
-        );
-        if (existingPaymentIndex !== -1) {
-          return {
-            ...oldData,
-            data: oldData.data.map((payment, index) =>
-              index === existingPaymentIndex ? { ...payment, ...updatedPayment } : payment
-            ),
-          };
+      queryClient.setQueryData(
+        ["users", currentPage, deepSearch && debouncedSearchInput ? debouncedSearchInput : null],
+        (oldData) => {
+          if (!oldData) return { data: [updatedUser], pagination: paginations };
+          const existingUserIndex = oldData.data.findIndex(
+            (user) => user.id === updatedUser.id
+          );
+          if (existingUserIndex !== -1) {
+            return {
+              ...oldData,
+              data: oldData.data.map((user, index) =>
+                index === existingUserIndex ? { ...user, ...updatedUser } : user
+              ),
+            };
+          }
+          return { ...oldData, data: [...oldData.data, updatedUser] };
         }
-        return { ...oldData, data: [...oldData.data, updatedPayment] };
-      });
+      );
     };
 
     socketManager.connect();
-
     socketManager.io.on("notify:admin:user:added", handlePaymentAdded);
     socketManager.io.on("notify:admin:user:updated", handlePaymentAdded);
 
-    // Cleanup
     return () => {
-      socketManager.disconnect(); 
+      socketManager.io.off("notify:admin:user:added", handlePaymentAdded);
+      socketManager.io.off("notify:admin:user:updated", handlePaymentAdded);
     };
-  }, [queryClient]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryClient, currentPage, deepSearch, debouncedSearchInput]);
 
   return {
     data,
@@ -118,7 +105,8 @@ export const useUserData = () => {
     setRecieveDate,
     recieveDate,
     newlyAddedId,
-    setFilterTag,
-    amountDetails
+    setDeepSearch,
+    deepSearch,
+    paginations,
   };
 };

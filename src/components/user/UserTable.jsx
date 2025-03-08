@@ -11,40 +11,44 @@ const UserTable = ({filteredData, isLoading, newUser}) => {
 
   return (
     <div className="relative">
-      <div className="flex overflow-hidden rounded-xl border border-[#DBE0E5] relative ">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+      <div className="flex overflow-scroll rounded-xl border border-[#DBE0E5] relative max-h-[600px]">
+        <table className="w-full table-fixed text-sm text-left text-gray-500">
+          <thead className="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 max-lg:w-[150px]">
+                #Serial Id
+              </th>
+              <th scope="col" className="px-6 py-3 max-lg:w-[150px]">
                 Date
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 max-lg:w-[150px]">
                 #Id
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 max-lg:w-[150px]">
                 User Id
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 max-lg:w-[150px]">
                 Balance
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 max-lg:w-[150px]">
                 Status
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 max-lg:w-[150px]">
                 Creator
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 max-lg:w-[150px]">
                 Action
               </th>
             </tr>
           </thead>
           <tbody>
-            {filteredData?.map((items) => {
+            {filteredData?.map((items,index) => {
               return (
                 <tr
                   key={items.id}
                   className={`bg-white border-b hover:bg-gray-50  ${newUser?.id === items.id && "flash"}`}
                 >
+                  <td className="px-6 py-4">#{index+1}</td>
                   <th
                     scope="row"
                     className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"

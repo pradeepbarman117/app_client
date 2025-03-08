@@ -1,19 +1,132 @@
+// import { useState, useEffect, useMemo } from "react";
+// import { useQueryClient } from "@tanstack/react-query";
+// import { useMasterRequestQuery } from "../../queries/finance/request/requestQuery";
+// import socketManager from "../../services/socket/socket";
+
+// export const usePaymentData = () => {
+//   const [searchInput, setSearchInput] = useState("");
+//   const [recieveDate, setRecieveDate] = useState({ start: "", end: "" });
+//   const [newlyAddedId, setNewlyAddedId] = useState(null);
+//   const [filterTag, setFilterTag] = useState("all");
+//   const [currentPage, setCurrentPage] = useState(1); // Manage page state here
+//   const [deepSearch,setDeepSearch] = useState(false);
+//   const queryClient = useQueryClient();
+//   const { data, isLoading } = useMasterRequestQuery(currentPage);
+//   // Pagination data from backend
+//   const paginations = {
+//     currentPage: data?.pagination?.currentPage || 1,
+//     totalPages: data?.pagination?.totalPages || 1,
+//     totalItems: data?.pagination?.totalItems || 0,
+//     setCurrentPage, // Pass setter to update page
+//   };
+
+//   // Memoized filtering logic
+//   const filteredRequest = useMemo(() => {
+//     if (!data?.data) return [];
+
+//     return data.data.filter((items) => {
+//       const requestId = items.requestId.toString().toLowerCase();
+//       const userId = items?.masterList?.userId?.toString().toLowerCase() || "";
+//       const search = searchInput.toLowerCase();
+
+//       const matchesFilter = filterTag === "all" ? true : items.status === filterTag;
+//       const matchesSearch = requestId.includes(search) || userId.includes(search);
+//       const combinedMatch = matchesFilter && (search ? matchesSearch : true);
+
+//       if (!recieveDate.start || !recieveDate.end) {
+//         return combinedMatch;
+//       }
+
+//       const startDate = new Date(recieveDate.start);
+//       const endDate = new Date(recieveDate.end);
+//       endDate.setHours(23, 59, 59, 999);
+
+//       const itemDate = new Date(items.createdAt);
+
+//       return itemDate >= startDate && itemDate <= endDate && combinedMatch;
+//     });
+//   }, [data, recieveDate.start, recieveDate.end, searchInput, filterTag]);
+
+//   useEffect(() => {
+//     const handlePaymentAdded = (updatedPayment) => {
+//       setNewlyAddedId(updatedPayment);
+//       setTimeout(() => setNewlyAddedId(null), 1000);
+//       queryClient.setQueryData(["request/master", currentPage], (oldData) => {
+//         if (!oldData) return { data: [updatedPayment], pagination: paginations };
+//         const existingPaymentIndex = oldData.data.findIndex(
+//           (master) => master.id === updatedPayment.id
+//         );
+//         if (existingPaymentIndex !== -1) {
+//           return {
+//             ...oldData,
+//             data: oldData.data.map((payment, index) =>
+//               index === existingPaymentIndex ? { ...payment, ...updatedPayment } : payment
+//             ),
+//           };
+//         }
+//         return { ...oldData, data: [...oldData.data, updatedPayment] };
+//       });
+//     };
+
+//     socketManager.connect();
+//     socketManager.io.on("adminMasterRequestAdded", handlePaymentAdded);
+//     socketManager.io.on("adminMasterRequestUpdated", handlePaymentAdded);
+
+//     return () => {
+//       socketManager.io.off("adminMasterRequestAdded", handlePaymentAdded);
+//       socketManager.io.off("adminMasterRequestUpdated", handlePaymentAdded);
+//     };
+//   // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [queryClient, currentPage]); // Add currentPage to dependencies
+
+//   return {  
+//     data,
+//     isLoading,
+//     filteredRequest,
+//     searchInput,
+//     setSearchInput,
+//     setRecieveDate,
+//     recieveDate,
+//     newlyAddedId,
+//     setFilterTag,
+//     paginations,
+//     setDeepSearch,
+//     deepSearch
+//   };
+// };
+
+
+
 import { useState, useEffect, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMasterRequestQuery } from "../../queries/finance/request/requestQuery";
 import socketManager from "../../services/socket/socket";
+import useDebounce from "../../hooks/useDebounce";
 
 export const usePaymentData = () => {
   const [searchInput, setSearchInput] = useState("");
   const [recieveDate, setRecieveDate] = useState({ start: "", end: "" });
   const [newlyAddedId, setNewlyAddedId] = useState(null);
   const [filterTag, setFilterTag] = useState("all");
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [deepSearch, setDeepSearch] = useState(false);
 
   const queryClient = useQueryClient();
-  const { data, isLoading } = useMasterRequestQuery();
-  let paginations = data?.pagination
-  // Memoized filtering logic
+
+  const debouncedSearchInput = useDebounce(searchInput,500);
+
+  const { data, isLoading } = useMasterRequestQuery(
+    currentPage,
+    deepSearch && debouncedSearchInput ? debouncedSearchInput : null // Pass requestId only when deepSearch is true
+  );
+
+  const paginations = {
+    currentPage: data?.pagination?.currentPage || 1,
+    totalPages: data?.pagination?.totalPages || 1,
+    totalItems: data?.pagination?.totalItems || 0,
+    setCurrentPage,
+  };
+
   const filteredRequest = useMemo(() => {
     if (!data?.data) return [];
 
@@ -23,8 +136,9 @@ export const usePaymentData = () => {
       const search = searchInput.toLowerCase();
 
       const matchesFilter = filterTag === "all" ? true : items.status === filterTag;
-      const matchesSearch =
-        requestId.includes(search) || userId.includes(search);
+      const matchesSearch = deepSearch
+        ? true // Backend handles requestId search
+        : requestId.includes(search) || userId.includes(search); // Client-side search when deepSearch is false
       const combinedMatch = matchesFilter && (search ? matchesSearch : true);
 
       if (!recieveDate.start || !recieveDate.end) {
@@ -33,35 +147,36 @@ export const usePaymentData = () => {
 
       const startDate = new Date(recieveDate.start);
       const endDate = new Date(recieveDate.end);
-      endDate.setHours(23, 59, 59, 999); // Full end date
+      endDate.setHours(23, 59, 59, 999);
 
       const itemDate = new Date(items.createdAt);
 
       return itemDate >= startDate && itemDate <= endDate && combinedMatch;
     });
-  }, [data, recieveDate.start, recieveDate.end, searchInput, filterTag]);
+  }, [data, recieveDate.start, recieveDate.end, searchInput, filterTag, deepSearch]);
 
   useEffect(() => {
     const handlePaymentAdded = (updatedPayment) => {
       setNewlyAddedId(updatedPayment);
       setTimeout(() => setNewlyAddedId(null), 1000);
-      queryClient.setQueryData(["request/master"], (oldData) => {
-        if (!oldData) return { data: [updatedPayment] };
-        const existingPaymentIndex = oldData.data.findIndex(
-          (master) => master.id === updatedPayment.id
-        );
-        if (existingPaymentIndex !== -1) {
-          return {
-            ...oldData,
-            data: oldData.data.map((payment, index) =>
-              index === existingPaymentIndex
-                ? { ...payment, ...updatedPayment }
-                : payment
-            ),
-          };
+      queryClient.setQueryData(
+        ["request/master", currentPage, deepSearch && searchInput ? searchInput : null],
+        (oldData) => {
+          if (!oldData) return { data: [updatedPayment], pagination: paginations };
+          const existingPaymentIndex = oldData.data.findIndex(
+            (master) => master.id === updatedPayment.id
+          );
+          if (existingPaymentIndex !== -1) {
+            return {
+              ...oldData,
+              data: oldData.data.map((payment, index) =>
+                index === existingPaymentIndex ? { ...payment, ...updatedPayment } : payment
+              ),
+            };
+          }
+          return { ...oldData, data: [...oldData.data, updatedPayment] };
         }
-        return { ...oldData, data: [...oldData.data, updatedPayment] };
-      });
+      );
     };
 
     socketManager.connect();
@@ -72,7 +187,8 @@ export const usePaymentData = () => {
       socketManager.io.off("adminMasterRequestAdded", handlePaymentAdded);
       socketManager.io.off("adminMasterRequestUpdated", handlePaymentAdded);
     };
-  }, [queryClient]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryClient, currentPage, deepSearch, searchInput]);
 
   return {
     data,
@@ -84,6 +200,8 @@ export const usePaymentData = () => {
     recieveDate,
     newlyAddedId,
     setFilterTag,
-    paginations
+    paginations,
+    setDeepSearch,
+    deepSearch,
   };
 };

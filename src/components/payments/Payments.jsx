@@ -15,7 +15,10 @@ const Payments = () => {
     searchInput,
     setFilterTag,
     paginations,
+    setDeepSearch,
+    deepSearch,
   } = usePaymentData();
+  
   const { amountDetails } = useBalanceData();
 
   const [activeTab, setActiveTab] = useState(1);
@@ -78,10 +81,11 @@ const Payments = () => {
           <PaymentSearch
             searchInput={searchInput}
             setSearchInput={setSearchInput}
+            deepSearch={{setDeepSearch,deepSearch}}
           />
         </div>
       </div>
-      <PaymentTable fileredData={filteredRequest} paginations={paginations} />
+      <PaymentTable fileredData={filteredRequest} />
       <div className="my-5">
         <Pagination paginations={paginations} />
       </div>

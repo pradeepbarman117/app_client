@@ -32,6 +32,9 @@ const PaymentTable = ({ fileredData }) => {
               <th className="px-4 py-3 text-left text-[#121417] text-sm w-[100px] font-medium leading-normal">
                 Serial
               </th>
+              <th className="px-4 py-3 text-left text-[#121417] text-sm w-[100px] font-medium leading-normal">
+                #id
+              </th>
               <th className="px-4 py-3 text-left text-[#121417] text-sm w-[200px] font-medium leading-normal">
                 Date
               </th>
@@ -61,6 +64,9 @@ const PaymentTable = ({ fileredData }) => {
                 <tr key={items.id} className="border-t border-t-[#DBE0E5]">
                   <td className="h-[72px] px-4 py-2 text-[#121417] text-sm font-normal leading-normal">
                     #{index + 1}
+                  </td>
+                  <td className="h-[72px] px-4 py-2 text-[#121417] text-sm font-normal leading-normal">
+                    #{items.id}
                   </td>
                   <td className="h-[72px] px-4 py-2 text-[#61788A] text-sm font-normal leading-normal">
                     {dateFormator(items.createdAt)}

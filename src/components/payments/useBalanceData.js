@@ -13,7 +13,6 @@ export const useBalanceData = () => {
 
     const queryClient = useQueryClient();
     const { data } = useAmountQuery();
-    console.log(data);
     // Effect to calculate amount details based on status
     useEffect(() => {
         if (!data?.data) return;
