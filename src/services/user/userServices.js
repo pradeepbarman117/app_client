@@ -9,10 +9,14 @@ const userServices = {
             }
         });
     },
-    getAll:(token)=>{
+    getAll:(token,page,userId)=>{
         return api.get(`/user/get`,{
             headers:{
                 'Authorization': `Bearer ${token}`,
+            },
+            params:{
+                page,
+                userId,
             }
         })
     }

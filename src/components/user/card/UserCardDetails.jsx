@@ -1,14 +1,10 @@
-import {
-  Users,
-  UserRoundCheck,
-  UserRoundX,
-  Wifi,
-} from "lucide-react";
-import formatIndianNumber from '../../../utility/currencyFormator'
+import { Users, UserRoundCheck, UserRoundX, Wifi } from "lucide-react";
+import formatIndianNumber from "../../../utility/currencyFormator";
+import { useTotalUserData } from "../useTotalUserData";
 
 const UserCardDetails = () => {
+  const { userDetails } = useTotalUserData();
 
-  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-4">
       <div className="flex flex-col gap-3 rounded-xl p-6 bg-blue-100 hover:bg-blue-200 transition-colors">
@@ -17,7 +13,7 @@ const UserCardDetails = () => {
           <Users className="text-blue-500 w-6 h-6" />
         </div>
         <p className="text-blue-900 tracking-tight text-2xl font-bold flex items-center">
-          {/* {formatIndianNumber(userDetails?.total || 20000)} */}
+          {formatIndianNumber(userDetails?.total || 20000)}
         </p>
       </div>
 
@@ -27,7 +23,7 @@ const UserCardDetails = () => {
           <UserRoundCheck className="text-green-500 w-6 h-6" />
         </div>
         <p className="text-green-900 tracking-tight text-2xl font-bold flex items-center">
-          {/* {formatIndianNumber(userDetails?.approved || 17000)} */}
+          {formatIndianNumber(userDetails?.active || 17000)}
         </p>
       </div>
 
@@ -37,23 +33,22 @@ const UserCardDetails = () => {
           <UserRoundX className="text-red-500 w-6 h-6" />
         </div>
         <p className="text-red-900 tracking-tight text-2xl font-bold flex items-center">
-          {/* {formatIndianNumber(userDetails?.rejected || 3000)} */}
+          {formatIndianNumber(userDetails?.blocked)}
         </p>
       </div>
 
       <div className="flex flex-col gap-3 rounded-xl p-6 bg-purple-100 hover:bg-purple-200 transition-colors">
         <div className="flex items-center justify-between">
           <p className="text-purple-800 text-base font-medium">Online User</p>
-          <Wifi className="text-purple-800 w-6 h-6 animate-pulse"  />
+          <Wifi className="text-purple-800 w-6 h-6 animate-pulse" />
         </div>
         <p className="text-purple-500 tracking-tight text-2xl font-bold flex items-center">
           {/* <IndianRupee strokeWidth={2.5} className="w-5 h-5 mr-1" /> */}
-          {/* {formatIndianNumber(userDetails?.online || 6540 )} */}
+          {formatIndianNumber(userDetails?.online || 6540 )}
         </p>
       </div>
     </div>
   );
 };
-
 
 export default UserCardDetails;

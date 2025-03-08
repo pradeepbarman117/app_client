@@ -8,7 +8,7 @@ const fetchAmounts = async ()=>{
         const response = await api.get('/finance/get/amounts',{
             headers:{
                 'Authorization': `Bearer ${token}`,
-            }
+            },
         });
         return response.data
     }catch(err){

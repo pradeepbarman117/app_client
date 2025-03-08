@@ -5,6 +5,7 @@ import PaymentTable from "./table/PaymentTable";
 import { usePaymentData } from "./usePaymentData";
 import AmountCard from "../common/amount-card/AmountCard";
 import { useBalanceData } from "./useBalanceData";
+import Pagination from "../common/pagination/Pagination";
 
 const Payments = () => {
   const {
@@ -13,7 +14,11 @@ const Payments = () => {
     setRecieveDate,
     searchInput,
     setFilterTag,
+    paginations,
+    setDeepSearch,
+    deepSearch,
   } = usePaymentData();
+  
   const { amountDetails } = useBalanceData();
 
   const [activeTab, setActiveTab] = useState(1);
@@ -21,14 +26,18 @@ const Payments = () => {
   const tabsData = [
     {
       id: 1,
-      name: "pending",
+      name: "all",
     },
     {
       id: 2,
-      name: "approved",
+      name: "pending",
     },
     {
       id: 3,
+      name: "approved",
+    },
+    {
+      id: 4,
       name: "rejected",
     },
   ];
@@ -40,7 +49,7 @@ const Payments = () => {
 
   return (
     <>
-      <div className="mt-3">
+      <div className="my-5">
         <AmountCard amountDetails={amountDetails} />
       </div>
       <div className="flex flex-col md:flex-row justify-between mt-3 pb-4 gap-3">
@@ -72,12 +81,17 @@ const Payments = () => {
           <PaymentSearch
             searchInput={searchInput}
             setSearchInput={setSearchInput}
+            deepSearch={{setDeepSearch,deepSearch}}
           />
         </div>
       </div>
       <PaymentTable fileredData={filteredRequest} />
+      <div className="my-5">
+        <Pagination paginations={paginations} />
+      </div>
     </>
   );
 };
+
 
 export default Payments;
