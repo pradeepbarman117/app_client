@@ -1,20 +1,20 @@
 import {
-  IndianRupee,
   ArrowRight,
+  Calendar,
   CheckCircle,
-  XCircle,
   Clock,
   Eye,
-  Calendar,
   Filter,
+  IndianRupee,
+  XCircle,
 } from "lucide-react";
-import { dateFormatorWithTime } from "../../hooks/dateFormator";
-import { useTransactionListQuery } from "../../queries/finance/transaction/transactionQuery";
+import Pagination from "../pagination/Pagination";
 import { NavLink } from "react-router-dom";
+import PropTypes from "prop-types";
+import { dateFormatorWithTime } from "../../../hooks/dateFormator";
+import TransactionTableLoader from "./TransactionTableLoader";
 
-const HomeTransactionTable = () => {
-  const { data } = useTransactionListQuery();
-
+const TransactionTables = ({ filteredTransaction, paginations, isLoading }) => {
   const getStatusDetails = (status) => {
     switch (status) {
       case "completed":
@@ -49,7 +49,7 @@ const HomeTransactionTable = () => {
             <Filter className="h-4 w-4" />
           </button>
           <NavLink
-            to="/transactions"
+            to="/transaction"
             className="hidden sm:flex items-center gap-1 text-blue-600 font-medium text-sm hover:text-blue-700 transition-colors"
           >
             View All
@@ -93,7 +93,8 @@ const HomeTransactionTable = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {data?.data.map((item, index) => {
+              {isLoading ? <TransactionTableLoader /> : null}
+              {filteredTransaction?.map((item, index) => {
                 const statusDetails = getStatusDetails(item.status);
                 return (
                   <tr
@@ -139,9 +140,20 @@ const HomeTransactionTable = () => {
                   </tr>
                 );
               })}
+              {filteredTransaction?.length === 0 && (
+                <tr className="hover:bg-blue-50/30 transition-colors duration-150">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    No Data Found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div className="my-4">
+        <Pagination paginations={paginations} />
       </div>
 
       {/* Mobile View All Link */}
@@ -158,4 +170,10 @@ const HomeTransactionTable = () => {
   );
 };
 
-export default HomeTransactionTable;
+TransactionTables.propTypes = {
+  filteredTransaction: PropTypes.array,
+  paginations: PropTypes.object,
+  isLoading: PropTypes.bool.isRequired,
+};
+
+export default TransactionTables;

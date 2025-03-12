@@ -1,20 +1,6 @@
 // import { useEffect, useState } from "react";
 
 const SidebarSkeletor = () => {
-
-    // const [loading, setLoading] = useState(true);
-
-    // // Simulate data fetching (e.g., API call)
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         setLoading(false); // After 2 seconds, stop loading
-    //     }, 1000);
-
-    //     return () => clearTimeout(timer); // Clean up timer
-    // }, []);
-
-    // if (loading) {
-        // Skeleton loader rendering
         return (
             <div className="layout-content-container flex flex-col w-80 pt-20">
                 <div className="flex h-full min-h-[700px] flex-col justify-between p-4">

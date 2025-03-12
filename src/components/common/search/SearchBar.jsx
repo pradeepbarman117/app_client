@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useCallback } from "react";
 
-const PaymentSearch = ({ setSearchInput,deepSearch }) => {
+const SearchBar = ({ setSearchInput,deepSearch }) => {
   const handleSearch = useCallback(
     (e) => {
       setSearchInput(e.target.value);
@@ -14,12 +14,12 @@ const PaymentSearch = ({ setSearchInput,deepSearch }) => {
   }, []);
 
   return (
-    <div className="flex items-center">
+    <div className="flex gap-3 md:items-center md:flex-row flex-col">
       <button
         type="button"
         className={`
-          py-2.5 px-5 me-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border focus:z-10 focus:ring-4 focus:ring-gray-100
-          ${deepSearch?.deepSearch && 'bg-indigo-400 text-white'}
+          py-2.5 px-5 me-2 md:w-auto w-full text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border focus:z-10 focus:ring-4 focus:ring-gray-100
+          ${deepSearch?.deepSearch && 'bg-blue-400 text-white'}
         `}
         onClick={()=>deepSearch?.setDeepSearch(!deepSearch?.deepSearch)}
         >
@@ -47,6 +47,7 @@ const PaymentSearch = ({ setSearchInput,deepSearch }) => {
           </div>
           <input
             type="search"
+            id="default-search"
             className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"
             placeholder="Search By Id"
             onChange={handleSearch}
@@ -57,9 +58,9 @@ const PaymentSearch = ({ setSearchInput,deepSearch }) => {
   );
 };
 
-PaymentSearch.propTypes = {
+SearchBar.propTypes = {
   setSearchInput: PropTypes.func.isRequired,
   deepSearch:PropTypes.object.isRequired,
 };
 
-export default PaymentSearch;
+export default SearchBar;

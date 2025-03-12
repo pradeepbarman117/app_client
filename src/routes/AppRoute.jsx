@@ -13,6 +13,8 @@ import MasterDetailsForm from "../components/master/details/forms/MasterDetailsF
 import PaymentPage from '../pages/payments/PaymentPage'
 import MasterUserPage from "../pages/master/MasterUserPage";
 import Transaction from "../components/transaction/Transaction";
+import MasterTransaction from "../components/master/transaction/MasterTransaction";
+import BetsPage from "../pages/bets/BetsPage";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +52,10 @@ const router = createBrowserRouter([
               {
                 path: "overview",
                 element:<MasterDetailsForm/>,
+              },
+              {
+                path: "transaction",
+                element:<MasterTransaction/>,
               }
             ]
           },
@@ -62,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "/transactions",
         element: <Transaction/>,
+      },
+      {
+        path:'/bets',
+        element:<BetsPage/>
       }
     ],
   },

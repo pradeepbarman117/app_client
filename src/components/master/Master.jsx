@@ -23,7 +23,6 @@ const Master = () => {
   const toggleModal = () => setIsOpen((prev) => !prev);
 
   if (isLoading) return <MasterSkeleton />;
-  console.log("Master");
 
   return (
     <>
@@ -66,7 +65,7 @@ const Master = () => {
             newMaster={newlyAddedId}
             loader={loader}
           />
-          <MasterPagination />
+          {/* <MasterPagination /> */}
         </div>
       </div>
 
