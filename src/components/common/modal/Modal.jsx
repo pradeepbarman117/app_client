@@ -1,3 +1,65 @@
+// import PropTypes from "prop-types";
+
+// const Modal = ({ isOpen, onClose, children, title }) => {
+//   return (
+//     <>
+//       <div
+//         tabIndex={-1}
+//         aria-hidden={isOpen ? "false" : "true"} // Hide when isOpen is false
+//         className={`${
+//           isOpen ? "flex" : "hidden"
+//         } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full bg-[#333333b0]`}
+//       >
+//         <div
+//           className={`relative p-4 w-full max-w-2xl bg-white rounded-lg shadow transform`}
+//         >
+//           {/* Modal content */}
+//           <div className="relative bg-white rounded-lg shadow">
+//             {/* Modal header */}
+//             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-300">
+//               <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+//               <button
+//                 type="button"
+//                 className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+//                 onClick={onClose} // Close the modal
+//               >
+//                 <svg
+//                   className="w-3 h-3"
+//                   aria-hidden="true"
+//                   xmlns="http://www.w3.org/2000/svg"
+//                   fill="none"
+//                   viewBox="0 0 14 14"
+//                 >
+//                   <path
+//                     stroke="currentColor"
+//                     strokeLinecap="round"
+//                     strokeLinejoin="round"
+//                     strokeWidth={2}
+//                     d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+//                   />
+//                 </svg>
+//                 <span className="sr-only">Close modal</span>
+//               </button>
+//             </div>
+//             {children}
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// Modal.propTypes = {
+//   isOpen: PropTypes.bool.isRequired,
+//   onClose: PropTypes.func.isRequired,
+//   children: PropTypes.node.isRequired,
+//   title: PropTypes.string.isRequired,
+// };
+
+// export default Modal;
+
+
+
 import PropTypes from "prop-types";
 
 const Modal = ({ isOpen, onClose, children, title }) => {
@@ -5,44 +67,44 @@ const Modal = ({ isOpen, onClose, children, title }) => {
     <>
       <div
         tabIndex={-1}
-        aria-hidden={isOpen ? "false" : "true"} // Hide when isOpen is false
+        aria-hidden={!isOpen}
         className={`${
           isOpen ? "flex" : "hidden"
-        } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full bg-[#333333b0]`}
+        } fixed inset-0 z-50 justify-center items-center bg-[#333333b0]`}
       >
+        {/* Modal Container */}
         <div
-          className={`relative p-4 w-full max-w-2xl bg-white rounded-lg shadow transform`}
+          className="relative w-full max-w-2xl mx-4 bg-white rounded-lg shadow-lg max-h-[90vh] flex flex-col"
         >
-          {/* Modal content */}
-          <div className="relative bg-white rounded-lg shadow">
-            {/* Modal header */}
-            <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-300">
-              <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
-              <button
-                type="button"
-                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                onClick={onClose} // Close the modal
+          {/* Modal Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-300 sticky top-0 bg-white z-10">
+            <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+            <button
+              type="button"
+              className="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center"
+              onClick={onClose}
+            >
+              <svg
+                className="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
               >
-                <svg
-                  className="w-3 h-3"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 14"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                  />
-                </svg>
-                <span className="sr-only">Close modal</span>
-              </button>
-            </div>
-            {children}
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span className="sr-only">Close modal</span>
+            </button>
           </div>
+
+          {/* Modal Content (Scrollable) */}
+          <div className="overflow-y-auto p-4 flex-1">{children}</div>
         </div>
       </div>
     </>

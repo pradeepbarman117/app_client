@@ -33,14 +33,13 @@ export const useTransactionData = () => {
     if (!data?.data) return [];
 
     return data.data.filter((items) => {
-      const requestId = items.requestId.toString().toLowerCase();
-      const userId = items?.masterList?.userId?.toString().toLowerCase() || "";
+      const requestId = items.transactionId.toString().toLowerCase();
       const search = searchInput.toLowerCase();
 
       const matchesFilter = filterTag === "all" ? true : items.status === filterTag;
       const matchesSearch = deepSearch
         ? true // Backend handles requestId search
-        : requestId.includes(search) || userId.includes(search); // Client-side search when deepSearch is false
+        : requestId.includes(search) ; // Client-side search when deepSearch is false
       const combinedMatch = matchesFilter && (search ? matchesSearch : true);
 
       if (!recieveDate.start || !recieveDate.end) {
@@ -57,40 +56,40 @@ export const useTransactionData = () => {
     });
   }, [data, recieveDate.start, recieveDate.end, searchInput, filterTag, deepSearch]);
 
-  useEffect(() => {
-    const handlePaymentAdded = (updatedPayment) => {
-      setNewlyAddedId(updatedPayment);
-      setTimeout(() => setNewlyAddedId(null), 1000);
-      queryClient.setQueryData(
-        ["request/master", currentPage, deepSearch && searchInput ? searchInput : null],
-        (oldData) => {
-          if (!oldData) return { data: [updatedPayment], pagination: paginations };
-          const existingPaymentIndex = oldData.data.findIndex(
-            (master) => master.id === updatedPayment.id
-          );
-          if (existingPaymentIndex !== -1) {
-            return {
-              ...oldData,
-              data: oldData.data.map((payment, index) =>
-                index === existingPaymentIndex ? { ...payment, ...updatedPayment } : payment
-              ),
-            };
-          }
-          return { ...oldData, data: [...oldData.data, updatedPayment] };
-        }
-      );
-    };
+  // useEffect(() => {
+  //   const handlePaymentAdded = (updatedPayment) => {
+  //     setNewlyAddedId(updatedPayment);
+  //     setTimeout(() => setNewlyAddedId(null), 1000);
+  //     queryClient.setQueryData(
+  //       ["request/master", currentPage, deepSearch && searchInput ? searchInput : null],
+  //       (oldData) => {
+  //         if (!oldData) return { data: [updatedPayment], pagination: paginations };
+  //         const existingPaymentIndex = oldData.data.findIndex(
+  //           (master) => master.id === updatedPayment.id
+  //         );
+  //         if (existingPaymentIndex !== -1) {
+  //           return {
+  //             ...oldData,
+  //             data: oldData.data.map((payment, index) =>
+  //               index === existingPaymentIndex ? { ...payment, ...updatedPayment } : payment
+  //             ),
+  //           };
+  //         }
+  //         return { ...oldData, data: [...oldData.data, updatedPayment] };
+  //       }
+  //     );
+  //   };
 
-    socketManager.connect();
-    socketManager.io.on("adminMasterRequestAdded", handlePaymentAdded);
-    socketManager.io.on("adminMasterRequestUpdated", handlePaymentAdded);
+  //   socketManager.connect();
+  //   socketManager.io.on("adminMasterRequestAdded", handlePaymentAdded);
+  //   socketManager.io.on("adminMasterRequestUpdated", handlePaymentAdded);
 
-    return () => {
-      socketManager.io.off("adminMasterRequestAdded", handlePaymentAdded);
-      socketManager.io.off("adminMasterRequestUpdated", handlePaymentAdded);
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryClient, currentPage, deepSearch, searchInput]);
+  //   return () => {
+  //     socketManager.io.off("adminMasterRequestAdded", handlePaymentAdded);
+  //     socketManager.io.off("adminMasterRequestUpdated", handlePaymentAdded);
+  //   };
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [queryClient, currentPage, deepSearch, searchInput]);
 
   return {
     data,
